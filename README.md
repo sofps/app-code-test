@@ -86,13 +86,18 @@ Implement the functionality to remove a location. Parameter `:id` is required to
 
 **Code** : `500`
 
+### 3. Code improvements
+
+We want the project to follow good coding principles, the aim should be for the code to be testable, easy to maintain and easy to understand. Make sure you factor the time limit into your planning, prioritise bigger architectural refactorings over smaller style improvements.
+
+### 4. Tests
+
+At least one unit test that covers one of the usecases explained above. If you have enough time, bonus points are awarded if you write tests for each public function exposed by the class(es) that handle your business logic
+
 ## Nice to haves (optional):
-
 - Add nice animations
-- Improvements to code
-- Tests
 
-Spend two to four hours working on this assignment - make sure to finish the issues you start.
+Spend three to six hours working on this assignment - make sure to finish the issues you start.
 
 Put the code in a GitHub repository and send us the link (niklas.holmqvist@kry.se) when you're done. 
 
