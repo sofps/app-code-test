@@ -1,11 +1,13 @@
-package com.codetest.main
+package com.codetest.main.data.repository
 
 import com.codetest.main.data.api.LocationApiService
 import com.codetest.main.model.Location
 import java.util.*
 import javax.inject.Inject
+import javax.inject.Singleton
 
-class LocationHelper @Inject constructor(
+@Singleton
+class LocationRepository @Inject constructor(
     private val locationApiService: LocationApiService
 ) {
 

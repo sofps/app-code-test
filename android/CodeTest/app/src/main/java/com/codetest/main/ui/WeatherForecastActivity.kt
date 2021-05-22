@@ -7,7 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
 import com.codetest.R
-import com.codetest.main.LocationHelper
+import com.codetest.main.data.repository.LocationRepository
 import com.codetest.main.model.Location
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
@@ -16,7 +16,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class WeatherForecastActivity : AppCompatActivity() {
 
-    @Inject lateinit var locationHelper: LocationHelper
+    @Inject lateinit var locationRepository: LocationRepository
 
     private var adapter = ListAdapter()
     private var locations: List<Location> = arrayListOf()
@@ -37,7 +37,7 @@ class WeatherForecastActivity : AppCompatActivity() {
     }
 
     private fun fetchLocations() {
-        locationHelper.getLocations { response ->
+        locationRepository.getLocations { response ->
             if (response == null) {
                 showError()
             } else {
