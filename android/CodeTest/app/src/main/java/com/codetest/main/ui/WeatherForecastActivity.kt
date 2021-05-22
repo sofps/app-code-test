@@ -1,4 +1,4 @@
-package com.codetest.main
+package com.codetest.main.ui
 
 import android.app.AlertDialog
 import android.os.Bundle
@@ -7,8 +7,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
 import com.codetest.R
+import com.codetest.main.LocationHelper
 import com.codetest.main.model.Location
-import com.codetest.main.ui.LocationViewHolder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
