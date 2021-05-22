@@ -11,7 +11,7 @@ class LocationHelper @Inject constructor(
 
     fun getLocations(callback: (List<Location>?) -> Unit) {
         val locations: ArrayList<Location> = arrayListOf()
-        locationApiService.get("locations", {
+        locationApiService.getLocations({
             val list = it.get("locations").asJsonArray
             for (json in list) {
                 locations.add(Location.from(json.asJsonObject))

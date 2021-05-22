@@ -9,13 +9,13 @@ import io.reactivex.schedulers.Schedulers
 import retrofit2.Retrofit
 import retrofit2.http.GET
 import retrofit2.http.Header
-import retrofit2.http.Url
 import javax.inject.Inject
 import javax.inject.Singleton
 
 interface LocationApi {
-    @GET
-    fun get(@Header("X-Api-Key") apiKey: String, @Url url: String): Observable<JsonObject>
+
+    @GET("locations")
+    fun getLocations(@Header("X-Api-Key") apiKey: String): Observable<JsonObject>
 }
 
 @Singleton
@@ -25,8 +25,8 @@ class LocationApiService @Inject constructor(
 ) {
     private val api: LocationApi = retrofit.create(LocationApi::class.java)
 
-    fun get(url: String, success: (JsonObject) -> Unit, error: (String?) -> Unit) {
-        api.get(keyUtil.getKey(), url)
+    fun getLocations(success: (JsonObject) -> Unit, error: (String?) -> Unit) {
+        api.getLocations(keyUtil.getKey())
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribeBy(
