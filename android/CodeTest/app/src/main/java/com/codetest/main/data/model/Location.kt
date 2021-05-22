@@ -1,4 +1,4 @@
-package com.codetest.main.model
+package com.codetest.main.data.model
 
 import com.google.gson.JsonObject
 

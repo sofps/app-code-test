@@ -1,7 +1,7 @@
 package com.codetest.main.data.repository
 
 import com.codetest.main.data.api.LocationApiService
-import com.codetest.main.model.Location
+import com.codetest.main.data.model.Location
 import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton

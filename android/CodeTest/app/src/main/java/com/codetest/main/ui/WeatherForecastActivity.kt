@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
 import com.codetest.R
 import com.codetest.main.data.repository.LocationRepository
-import com.codetest.main.model.Location
+import com.codetest.main.data.model.Location
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject

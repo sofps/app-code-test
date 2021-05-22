@@ -5,8 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.codetest.R
-import com.codetest.main.model.Location
-import com.codetest.main.model.Status
+import com.codetest.main.data.model.Location
+import com.codetest.main.data.model.Status
 import kotlinx.android.synthetic.main.location.view.*
 
 
