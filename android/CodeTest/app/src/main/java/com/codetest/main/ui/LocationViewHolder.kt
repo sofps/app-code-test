@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.codetest.R
-import com.codetest.main.data.model.Location
+import com.codetest.main.data.model.LocationApiModel
 import com.codetest.main.data.model.Status
 import kotlinx.android.synthetic.main.location.view.*
 
@@ -20,7 +20,7 @@ class LocationViewHolder private constructor(itemView: View) : RecyclerView.View
         }
     }
 
-    fun setup(location: Location) {
+    fun setup(location: LocationApiModel) {
         itemView.card.setCardBackgroundColor(getColor(location.status))
         itemView.name.text = location.name
         val weather = location.temperature + "°C " + String(Character.toChars(location.status.value))

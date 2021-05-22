@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
 import com.codetest.R
 import com.codetest.main.data.repository.LocationRepository
-import com.codetest.main.data.model.Location
+import com.codetest.main.data.model.LocationApiModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
@@ -19,7 +19,7 @@ class WeatherForecastActivity : AppCompatActivity() {
     @Inject lateinit var locationRepository: LocationRepository
 
     private var adapter = ListAdapter()
-    private var locations: List<Location> = arrayListOf()
+    private var locations: List<LocationApiModel> = arrayListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

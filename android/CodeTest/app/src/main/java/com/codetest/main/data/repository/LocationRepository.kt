@@ -1,8 +1,7 @@
 package com.codetest.main.data.repository
 
 import com.codetest.main.data.api.LocationApiService
-import com.codetest.main.data.model.Location
-import java.util.*
+import com.codetest.main.data.model.LocationApiModel
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -11,14 +10,9 @@ class LocationRepository @Inject constructor(
     private val locationApiService: LocationApiService
 ) {
 
-    fun getLocations(callback: (List<Location>?) -> Unit) {
-        val locations: ArrayList<Location> = arrayListOf()
+    fun getLocations(callback: (List<LocationApiModel>?) -> Unit) {
         locationApiService.getLocations({
-            val list = it.get("locations").asJsonArray
-            for (json in list) {
-                locations.add(Location.from(json.asJsonObject))
-            }
-            callback(locations)
+            callback(it.locations)
         }, {
             callback(null)
         })

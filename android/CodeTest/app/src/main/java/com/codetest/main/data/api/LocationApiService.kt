@@ -1,7 +1,7 @@
 package com.codetest.main.data.api
 
 import com.codetest.main.KeyUtil
-import com.google.gson.JsonObject
+import com.codetest.main.data.model.GetLocationsResponse
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
@@ -15,7 +15,7 @@ import javax.inject.Singleton
 interface LocationApi {
 
     @GET("locations")
-    fun getLocations(@Header("X-Api-Key") apiKey: String): Observable<JsonObject>
+    fun getLocations(@Header("X-Api-Key") apiKey: String): Observable<GetLocationsResponse>
 }
 
 @Singleton
@@ -25,7 +25,7 @@ class LocationApiService @Inject constructor(
 ) {
     private val api: LocationApi = retrofit.create(LocationApi::class.java)
 
-    fun getLocations(success: (JsonObject) -> Unit, error: (String?) -> Unit) {
+    fun getLocations(success: (GetLocationsResponse) -> Unit, error: (String?) -> Unit) {
         api.getLocations(keyUtil.getKey())
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
