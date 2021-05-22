@@ -1,4 +1,4 @@
-package com.codetest.main.api
+package com.codetest.main.data.api
 
 import com.codetest.main.KeyUtil
 import com.google.gson.JsonObject

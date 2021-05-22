@@ -1,6 +1,6 @@
 package com.codetest.main
 
-import com.codetest.main.api.LocationApiService
+import com.codetest.main.data.api.LocationApiService
 import com.codetest.main.model.Location
 import java.util.*
 import javax.inject.Inject
