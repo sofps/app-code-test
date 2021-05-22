@@ -2,14 +2,18 @@ package com.codetest.main.ui
 
 import android.app.AlertDialog
 import android.os.Bundle
+import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import android.view.ViewGroup
 import com.codetest.R
 import com.codetest.main.data.repository.LocationRepository
-import com.codetest.main.data.model.LocationApiModel
+import com.codetest.main.domain.Location
+import com.codetest.main.domain.LocationSuccess
 import dagger.hilt.android.AndroidEntryPoint
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.rxkotlin.subscribeBy
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
@@ -19,7 +23,7 @@ class WeatherForecastActivity : AppCompatActivity() {
     @Inject lateinit var locationRepository: LocationRepository
 
     private var adapter = ListAdapter()
-    private var locations: List<LocationApiModel> = arrayListOf()
+    private var locations: List<Location> = arrayListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,14 +41,22 @@ class WeatherForecastActivity : AppCompatActivity() {
     }
 
     private fun fetchLocations() {
-        locationRepository.getLocations { response ->
-            if (response == null) {
-                showError()
-            } else {
-                locations = response
-                adapter.notifyDataSetChanged()
-            }
-        }
+        locationRepository.getLocations()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeBy(
+                onNext = { result ->
+                    if (result is LocationSuccess) {
+                        locations = result.locations
+                        adapter.notifyDataSetChanged()
+                    } else {
+                        showError()
+                    }
+                },
+                onError = {
+                    showError()
+                }
+            )
     }
 
     private fun showError() {

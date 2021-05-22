@@ -3,9 +3,7 @@ package com.codetest.main.data.api
 import com.codetest.main.KeyUtil
 import com.codetest.main.data.model.GetLocationsResponse
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.rxkotlin.subscribeBy
-import io.reactivex.schedulers.Schedulers
+import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -15,7 +13,7 @@ import javax.inject.Singleton
 interface LocationApi {
 
     @GET("locations")
-    fun getLocations(@Header("X-Api-Key") apiKey: String): Observable<GetLocationsResponse>
+    fun getLocations(@Header("X-Api-Key") apiKey: String): Observable<Response<GetLocationsResponse>>
 }
 
 @Singleton
@@ -25,17 +23,6 @@ class LocationApiService @Inject constructor(
 ) {
     private val api: LocationApi = retrofit.create(LocationApi::class.java)
 
-    fun getLocations(success: (GetLocationsResponse) -> Unit, error: (String?) -> Unit) {
+    fun getLocations(): Observable<Response<GetLocationsResponse>> =
         api.getLocations(keyUtil.getKey())
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeBy(
-                onNext = {
-                    success(it)
-                },
-                onError = {
-                    error(it.message)
-                }
-            )
-    }
 }
