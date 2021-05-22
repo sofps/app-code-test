@@ -9,10 +9,14 @@ import android.view.ViewGroup
 import com.codetest.R
 import com.codetest.main.model.Location
 import com.codetest.main.ui.LocationViewHolder
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
+import javax.inject.Inject
 
-
+@AndroidEntryPoint
 class WeatherForecastActivity : AppCompatActivity() {
+
+    @Inject lateinit var locationHelper: LocationHelper
 
     private var adapter = ListAdapter()
     private var locations: List<Location> = arrayListOf()
@@ -33,7 +37,7 @@ class WeatherForecastActivity : AppCompatActivity() {
     }
 
     private fun fetchLocations() {
-        LocationHelper.getLocations { response ->
+        locationHelper.getLocations { response ->
             if (response == null) {
                 showError()
             } else {
