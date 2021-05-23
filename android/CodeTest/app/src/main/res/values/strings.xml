@@ -4,4 +4,8 @@
     <string name="error_title">Error</string>
     <string name="error_message">Something went wrong</string>
     <string name="ok">OK</string>
+    <string name="location_name_hint">City name</string>
+    <string name="status_hint">Status</string>
+    <string name="temperature_hint">Temperature</string>
+    <string name="add_location_button_text">Add location</string>
 </resources>
