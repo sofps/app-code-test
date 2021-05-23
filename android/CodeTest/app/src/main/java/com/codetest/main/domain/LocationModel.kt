@@ -18,3 +18,10 @@ data class Location(
 data class LocationFailure(
     val error: String?
 ) : LocationResult
+
+data class NewLocation(
+    val id: String?,
+    val name: String,
+    val temperature: String,
+    val status: Status
+)

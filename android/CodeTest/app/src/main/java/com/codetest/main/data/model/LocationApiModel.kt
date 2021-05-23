@@ -24,3 +24,10 @@ data class LocationApiModel(
     val temperature: String?,
     val status: Status
 )
+
+data class AddLocationApiModel(
+    val id: String?,
+    val name: String,
+    val temperature: String,
+    val status: Status
+)
