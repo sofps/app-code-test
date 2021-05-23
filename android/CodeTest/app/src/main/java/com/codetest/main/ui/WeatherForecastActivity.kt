@@ -3,23 +3,18 @@ package com.codetest.main.ui
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.ViewGroup
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.codetest.R
-import com.codetest.main.data.repository.LocationRepository
-import com.codetest.main.domain.LocationSuccess
 import dagger.hilt.android.AndroidEntryPoint
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.rxkotlin.subscribeBy
-import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class WeatherForecastActivity : AppCompatActivity() {
 
-    @Inject lateinit var locationRepository: LocationRepository
+    private val viewModel: WeatherForecastViewModel by viewModels()
 
     private var adapter = ListAdapter()
     private var locations: List<LocationUI> = arrayListOf()
@@ -32,30 +27,19 @@ class WeatherForecastActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         recyclerView.adapter = adapter
         adapter.notifyDataSetChanged()
-    }
 
-    override fun onResume() {
-        super.onResume()
-        fetchLocations()
-    }
-
-    private fun fetchLocations() {
-        locationRepository.getLocations()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeBy(
-                onNext = { result ->
-                    if (result is LocationSuccess) {
-                        locations = result.locations.map { it.toLocationUI() }
-                        adapter.notifyDataSetChanged()
-                    } else {
-                        showError()
-                    }
-                },
-                onError = {
-                    showError()
+        viewModel.weatherForecastLiveData.observe(this) {
+            when (it) {
+                WeatherForecastState.Error -> showError()
+                WeatherForecastState.Loading -> {
+                    // TODO show progress
                 }
-            )
+                is WeatherForecastState.Success -> {
+                    locations = it.locations
+                    adapter.notifyDataSetChanged()
+                }
+            }
+        }
     }
 
     private fun showError() {
