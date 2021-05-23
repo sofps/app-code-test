@@ -24,6 +24,14 @@
         android:hint="@string/temperature_hint"
         android:inputType="numberDecimal" />
 
+    <TextView
+        android:id="@+id/error_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/add_location_error"
+        android:textColor="@color/red"
+        android:visibility="gone" />
+
     <Button
         android:id="@+id/add_location_button"
         android:layout_width="match_parent"

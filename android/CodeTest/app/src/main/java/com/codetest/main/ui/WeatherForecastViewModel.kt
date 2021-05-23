@@ -4,6 +4,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.codetest.main.domain.LocationSuccess
+import com.codetest.main.domain.NewLocation
+import com.codetest.main.usecase.AddLocationUseCase
 import com.codetest.main.usecase.GetLocationsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -14,13 +16,43 @@ import javax.inject.Inject
 
 @HiltViewModel
 class WeatherForecastViewModel @Inject constructor(
-    private val getLocationsUseCase: GetLocationsUseCase
+    private val getLocationsUseCase: GetLocationsUseCase,
+    private val addLocationUseCase: AddLocationUseCase
 ) : ViewModel() {
 
     val weatherForecastLiveData = MutableLiveData<WeatherForecastState>()
+    val addLocationLiveData = MutableLiveData<AddLocationState>()
 
     init {
         initView()
+    }
+
+    fun addLocation(name: String, status: String, temperature: String) {
+        viewModelScope.launch {
+            addLocationLiveData.value = AddLocationState.Loading
+            val location = NewLocation(
+                name = name,
+                temperature = temperature,
+                status = StatusUI.from(status).toStatus()
+            )
+            addLocationUseCase(location)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy(
+                    onNext = { result ->
+                        if (result is LocationSuccess) {
+                            addLocationLiveData.value = AddLocationState.Success
+                            initView()
+                        } else {
+                            addLocationLiveData.value = AddLocationState.Error
+                        }
+                    },
+                    onError = {
+                        addLocationLiveData.value = AddLocationState.Error
+                    }
+                )
+
+        }
     }
 
     private fun initView() {

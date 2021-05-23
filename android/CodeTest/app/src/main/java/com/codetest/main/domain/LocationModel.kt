@@ -20,7 +20,7 @@ data class LocationFailure(
 ) : LocationResult
 
 data class NewLocation(
-    val id: String?,
+    val id: String? = null,
     val name: String,
     val temperature: String,
     val status: Status

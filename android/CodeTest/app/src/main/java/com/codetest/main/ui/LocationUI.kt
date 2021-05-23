@@ -23,6 +23,13 @@ enum class StatusUI(val value: Int, val color: Int) {
     LIGHTENING(0x1F329, R.color.red),
     SNOW_CLOUD(0x1F328, R.color.grey),
     RAINY(0x1F327, R.color.grey);
+
+    override fun toString(): String = name.toLowerCase().capitalize().replace("_", " ")
+
+    companion object {
+        fun from(string: String): StatusUI = string.toUpperCase().replace(" ", "_")
+            .let { name -> values().first { it.name == name } }
+    }
 }
 
 fun Location.toLocationUI(): LocationUI {
@@ -47,4 +54,18 @@ fun Status.toStatusUI() = when(this) {
     Status.LIGHTENING -> StatusUI.LIGHTENING
     Status.SNOW_CLOUD -> StatusUI.SNOW_CLOUD
     Status.RAINY -> StatusUI.RAINY
+}
+
+fun StatusUI.toStatus() = when(this) {
+    StatusUI.CLOUDY -> Status.CLOUDY
+    StatusUI.SUNNY -> Status.SUNNY
+    StatusUI.MOSTLY_SUNNY -> Status.MOSTLY_SUNNY
+    StatusUI.PARTLY_SUNNY -> Status.PARTLY_SUNNY
+    StatusUI.PARTLY_SUNNY_RAIN -> Status.PARTLY_SUNNY_RAIN
+    StatusUI.THUNDER_CLOUD_AND_RAIN -> Status.THUNDER_CLOUD_AND_RAIN
+    StatusUI.TORNADO -> Status.TORNADO
+    StatusUI.BARELY_SUNNY -> Status.BARELY_SUNNY
+    StatusUI.LIGHTENING -> Status.LIGHTENING
+    StatusUI.SNOW_CLOUD -> Status.SNOW_CLOUD
+    StatusUI.RAINY -> Status.RAINY
 }
