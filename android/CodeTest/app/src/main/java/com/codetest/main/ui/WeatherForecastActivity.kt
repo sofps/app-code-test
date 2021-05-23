@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.codetest.R
 import com.codetest.main.data.repository.LocationRepository
-import com.codetest.main.domain.Location
 import com.codetest.main.domain.LocationSuccess
 import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -23,7 +22,7 @@ class WeatherForecastActivity : AppCompatActivity() {
     @Inject lateinit var locationRepository: LocationRepository
 
     private var adapter = ListAdapter()
-    private var locations: List<Location> = arrayListOf()
+    private var locations: List<LocationUI> = arrayListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,7 +46,7 @@ class WeatherForecastActivity : AppCompatActivity() {
             .subscribeBy(
                 onNext = { result ->
                     if (result is LocationSuccess) {
-                        locations = result.locations
+                        locations = result.locations.map { it.toLocationUI() }
                         adapter.notifyDataSetChanged()
                     } else {
                         showError()
