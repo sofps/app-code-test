@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.codetest.main.domain.LocationSuccess
 import com.codetest.main.domain.NewLocation
 import com.codetest.main.usecase.AddLocationUseCase
+import com.codetest.main.usecase.DeleteLocationUseCase
 import com.codetest.main.usecase.GetLocationsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -17,11 +18,13 @@ import javax.inject.Inject
 @HiltViewModel
 class WeatherForecastViewModel @Inject constructor(
     private val getLocationsUseCase: GetLocationsUseCase,
-    private val addLocationUseCase: AddLocationUseCase
+    private val addLocationUseCase: AddLocationUseCase,
+    private val deleteLocationUseCase: DeleteLocationUseCase
 ) : ViewModel() {
 
     val weatherForecastLiveData = MutableLiveData<WeatherForecastState>()
     val addLocationLiveData = MutableLiveData<AddLocationState>()
+    val deleteLocationLiveData = MutableLiveData<DeleteLocationState>()
 
     init {
         initView()
@@ -52,6 +55,23 @@ class WeatherForecastViewModel @Inject constructor(
                     }
                 )
 
+        }
+    }
+
+    fun removeLocation(position: Int, location: LocationUI) {
+        viewModelScope.launch {
+            deleteLocationLiveData.value = DeleteLocationState.Loading
+            deleteLocationUseCase(location.id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeBy(
+                    onComplete = {
+                        deleteLocationLiveData.value = DeleteLocationState.Success
+                    },
+                    onError = {
+                        deleteLocationLiveData.value = DeleteLocationState.Error(position, location)
+                    }
+                )
         }
     }
 

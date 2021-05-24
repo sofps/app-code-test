@@ -12,10 +12,12 @@ import android.widget.ArrayAdapter
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDialog
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.codetest.R
 import com.codetest.main.util.afterTextChanged
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.dialog_add_location.*
@@ -26,7 +28,7 @@ class WeatherForecastActivity : AppCompatActivity() {
     private val viewModel: WeatherForecastViewModel by viewModels()
 
     private var adapter = ListAdapter()
-    private var locations: List<LocationUI> = arrayListOf()
+    private var locations = mutableListOf<LocationUI>()
 
     private var addLocationDialog: AddLocationDialog? = null
     private val dialogListener = object : DialogListener {
@@ -64,6 +66,25 @@ class WeatherForecastActivity : AppCompatActivity() {
             recyclerView.adapter = it
         }
 
+        ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.adapterPosition
+                val location = locations[position]
+                viewModel.removeLocation(position, location)
+                locations.removeAt(position)
+                adapter.notifyItemRemoved(position)
+            }
+        }).attachToRecyclerView(recyclerView)
+
         viewModel.weatherForecastLiveData.observe(this) {
             when (it) {
                 WeatherForecastState.Error -> showError()
@@ -71,9 +92,26 @@ class WeatherForecastActivity : AppCompatActivity() {
                     // TODO show progress
                 }
                 is WeatherForecastState.Success -> {
-                    locations = it.locations
+                    locations.clear()
+                    locations.addAll(it.locations)
                     adapter.notifyDataSetChanged()
                 }
+            }
+        }
+
+        viewModel.deleteLocationLiveData.observe(this@WeatherForecastActivity) { state ->
+            if (state is DeleteLocationState.Error) {
+                val position = state.position
+                val location = state.location
+
+                Snackbar.make(
+                    recyclerView,
+                    resources.getString(R.string.location_deletion_error, location.name),
+                    Snackbar.LENGTH_LONG
+                ).show()
+
+                locations.add(position, location)
+                adapter.notifyItemInserted(position)
             }
         }
     }
