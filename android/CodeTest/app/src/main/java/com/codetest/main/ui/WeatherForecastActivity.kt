@@ -88,9 +88,10 @@ class WeatherForecastActivity : AppCompatActivity() {
             when (it) {
                 WeatherForecastState.Error -> showError()
                 WeatherForecastState.Loading -> {
-                    // TODO show progress
+                    progress.visibility = View.VISIBLE
                 }
                 is WeatherForecastState.Success -> {
+                    progress.visibility = View.GONE
                     if (it.clearAll) locations.clear()
                     locations.addAll(it.locations)
                     adapter.notifyDataSetChanged()
@@ -132,6 +133,7 @@ class WeatherForecastActivity : AppCompatActivity() {
         }
 
     private fun showError() {
+        progress.visibility = View.GONE
         Snackbar.make(
             recyclerView,
             resources.getString(R.string.error_message),

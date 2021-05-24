@@ -7,6 +7,7 @@ buildscript {
     ext.logging_interceptor_version = "4.9.1"
     ext.lifecycle_version = "2.3.1"
     ext.activity_ktx_version = "1.2.3"
+    ext.lottie_version = "3.5.0"
 
     repositories {
         google()
