@@ -1,7 +1,7 @@
 package com.codetest.main.di
 
 import android.content.Context
-import com.codetest.main.KeyUtil
+import com.codetest.main.data.api.KeyUtil
 import com.codetest.main.data.api.LocationApiService
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder

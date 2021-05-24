@@ -1,6 +1,5 @@
 package com.codetest.main.data.api
 
-import com.codetest.main.KeyUtil
 import com.codetest.main.data.model.AddLocationApiModel
 import com.codetest.main.data.model.GetLocationsResponse
 import io.reactivex.Completable

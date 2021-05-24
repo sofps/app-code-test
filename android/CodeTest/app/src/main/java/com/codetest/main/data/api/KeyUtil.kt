@@ -1,4 +1,4 @@
-package com.codetest.main
+package com.codetest.main.data.api
 
 import android.content.Context
 import android.content.SharedPreferences
