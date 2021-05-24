@@ -59,10 +59,10 @@ class WeatherForecastActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        adapter = ListAdapter()
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
-        recyclerView.adapter = adapter
-        adapter.notifyDataSetChanged()
+        adapter = ListAdapter().also {
+            recyclerView.adapter = it
+        }
 
         viewModel.weatherForecastLiveData.observe(this) {
             when (it) {
