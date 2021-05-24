@@ -92,7 +92,7 @@ class WeatherForecastActivity : AppCompatActivity() {
                     // TODO show progress
                 }
                 is WeatherForecastState.Success -> {
-                    locations.clear()
+                    if (it.clearAll) locations.clear()
                     locations.addAll(it.locations)
                     adapter.notifyDataSetChanged()
                 }

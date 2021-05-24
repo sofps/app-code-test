@@ -45,7 +45,14 @@ class WeatherForecastViewModel @Inject constructor(
                     onNext = { result ->
                         if (result is LocationSuccess) {
                             addLocationLiveData.value = AddLocationState.Success
-                            initView()
+                            // To avoid an extra request to get the list of locations again
+                            // we push the new location to weatherForecastLiveData with clearAll=false
+                            // so it's added at the bottom of the list
+                            weatherForecastLiveData.value =
+                                WeatherForecastState.Success(
+                                    result.locations.map { it.toLocationUI() },
+                                    clearAll = false
+                                )
                         } else {
                             addLocationLiveData.value = AddLocationState.Error
                         }
