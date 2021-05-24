@@ -1,9 +1,8 @@
 <resources>
     <string name="app_name">Code Test</string>
     <string name="action_add_location">Add location</string>
-    <string name="error_title">Error</string>
-    <string name="error_message">Something went wrong</string>
-    <string name="ok">OK</string>
+    <string name="error_message">Your locations could not be retrieved.</string>
+    <string name="retry">Retry</string>
     <string name="location_name_hint">City name</string>
     <string name="status_hint">Status</string>
     <string name="temperature_hint">Temperature</string>

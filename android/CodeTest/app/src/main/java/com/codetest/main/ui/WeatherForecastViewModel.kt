@@ -27,7 +27,7 @@ class WeatherForecastViewModel @Inject constructor(
     val deleteLocationLiveData = MutableLiveData<DeleteLocationState>()
 
     init {
-        initView()
+        loadLocations()
     }
 
     fun addLocation(name: String, status: String, temperature: String) {
@@ -82,7 +82,7 @@ class WeatherForecastViewModel @Inject constructor(
         }
     }
 
-    private fun initView() {
+    fun loadLocations() {
         viewModelScope.launch {
             getLocationsUseCase()
                 .subscribeOn(Schedulers.io())

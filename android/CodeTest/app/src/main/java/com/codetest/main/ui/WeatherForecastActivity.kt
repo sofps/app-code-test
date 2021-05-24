@@ -1,6 +1,5 @@
 package com.codetest.main.ui
 
-import android.app.AlertDialog
 import android.content.Context
 import android.os.Bundle
 import android.view.Menu
@@ -133,11 +132,11 @@ class WeatherForecastActivity : AppCompatActivity() {
         }
 
     private fun showError() {
-        AlertDialog.Builder(this)
-            .setTitle(resources.getString(R.string.error_title))
-            .setMessage(resources.getString(R.string.error_title))
-            .setPositiveButton(resources.getString(R.string.ok), { _, _ -> })
-            .create()
+        Snackbar.make(
+            recyclerView,
+            resources.getString(R.string.error_message),
+            Snackbar.LENGTH_LONG
+        ).setAction(R.string.retry) { viewModel.loadLocations() }
             .show()
     }
 
