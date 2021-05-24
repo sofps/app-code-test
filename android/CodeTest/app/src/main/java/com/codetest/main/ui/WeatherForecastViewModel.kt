@@ -8,10 +8,9 @@ import com.codetest.main.domain.NewLocation
 import com.codetest.main.usecase.AddLocationUseCase
 import com.codetest.main.usecase.DeleteLocationUseCase
 import com.codetest.main.usecase.GetLocationsUseCase
+import com.codetest.main.util.BaseSchedulerProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.rxkotlin.subscribeBy
-import io.reactivex.schedulers.Schedulers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,7 +18,8 @@ import javax.inject.Inject
 class WeatherForecastViewModel @Inject constructor(
     private val getLocationsUseCase: GetLocationsUseCase,
     private val addLocationUseCase: AddLocationUseCase,
-    private val deleteLocationUseCase: DeleteLocationUseCase
+    private val deleteLocationUseCase: DeleteLocationUseCase,
+    private val schedulerProvider: BaseSchedulerProvider
 ) : ViewModel() {
 
     val weatherForecastLiveData = MutableLiveData<WeatherForecastState>()
@@ -39,8 +39,8 @@ class WeatherForecastViewModel @Inject constructor(
                 status = StatusUI.from(status).toStatus()
             )
             addLocationUseCase(location)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.ui())
                 .subscribeBy(
                     onNext = { result ->
                         if (result is LocationSuccess) {
@@ -69,8 +69,8 @@ class WeatherForecastViewModel @Inject constructor(
         viewModelScope.launch {
             deleteLocationLiveData.value = DeleteLocationState.Loading
             deleteLocationUseCase(location.id)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.ui())
                 .subscribeBy(
                     onComplete = {
                         deleteLocationLiveData.value = DeleteLocationState.Success
@@ -85,8 +85,8 @@ class WeatherForecastViewModel @Inject constructor(
     fun loadLocations() {
         viewModelScope.launch {
             getLocationsUseCase()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(schedulerProvider.io())
+                .observeOn(schedulerProvider.ui())
                 .subscribeBy(
                     onNext = { result ->
                         if (result is LocationSuccess) {

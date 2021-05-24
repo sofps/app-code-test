@@ -3,6 +3,8 @@ package com.codetest.main.di
 import android.content.Context
 import com.codetest.main.data.api.KeyUtil
 import com.codetest.main.data.api.LocationApiService
+import com.codetest.main.util.BaseSchedulerProvider
+import com.codetest.main.util.SchedulerProvider
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -55,5 +57,8 @@ internal object AppModule {
         retrofit: Retrofit,
         keyUtil: KeyUtil
     ): LocationApiService = LocationApiService(retrofit, keyUtil)
+
+    @Provides
+    fun provideSchedulerProvider(): BaseSchedulerProvider = SchedulerProvider()
 
 }
