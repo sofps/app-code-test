@@ -2,10 +2,7 @@ package com.codetest.main.ui
 
 import android.content.Context
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.activity.viewModels
@@ -15,14 +12,16 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.codetest.R
+import com.codetest.databinding.ActivityMainBinding
+import com.codetest.databinding.DialogAddLocationBinding
 import com.codetest.main.util.afterTextChanged
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.dialog_add_location.*
 
 @AndroidEntryPoint
 class WeatherForecastActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityMainBinding
 
     private val viewModel: WeatherForecastViewModel by viewModels()
 
@@ -57,12 +56,14 @@ class WeatherForecastActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        setSupportActionBar(toolbar)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
+        setSupportActionBar(binding.toolbar)
 
-        recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        binding.recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         adapter = ListAdapter().also {
-            recyclerView.adapter = it
+            binding.recyclerView.adapter = it
         }
 
         ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
@@ -82,16 +83,16 @@ class WeatherForecastActivity : AppCompatActivity() {
                 locations.removeAt(position)
                 adapter.notifyItemRemoved(position)
             }
-        }).attachToRecyclerView(recyclerView)
+        }).attachToRecyclerView(binding.recyclerView)
 
         viewModel.weatherForecastLiveData.observe(this) {
             when (it) {
                 WeatherForecastState.Error -> showError()
                 WeatherForecastState.Loading -> {
-                    progress.visibility = View.VISIBLE
+                    binding.progress.visibility = View.VISIBLE
                 }
                 is WeatherForecastState.Success -> {
-                    progress.visibility = View.GONE
+                    binding.progress.visibility = View.GONE
                     if (it.clearAll) locations.clear()
                     locations.addAll(it.locations)
                     adapter.notifyDataSetChanged()
@@ -105,7 +106,7 @@ class WeatherForecastActivity : AppCompatActivity() {
                 val location = state.location
 
                 Snackbar.make(
-                    recyclerView,
+                    binding.recyclerView,
                     resources.getString(R.string.location_deletion_error, location.name),
                     Snackbar.LENGTH_LONG
                 ).show()
@@ -133,9 +134,9 @@ class WeatherForecastActivity : AppCompatActivity() {
         }
 
     private fun showError() {
-        progress.visibility = View.GONE
+        binding.progress.visibility = View.GONE
         Snackbar.make(
-            recyclerView,
+            binding.recyclerView,
             resources.getString(R.string.error_message),
             Snackbar.LENGTH_LONG
         ).setAction(R.string.retry) { viewModel.loadLocations() }
@@ -158,16 +159,19 @@ class WeatherForecastActivity : AppCompatActivity() {
 
     private inner class AddLocationDialog(context: Context) : AppCompatDialog(context) {
 
+        private lateinit var binding: DialogAddLocationBinding
+
         private var dialogListener: DialogListener? = null
 
         override fun onCreate(savedInstanceState: Bundle?) {
             super.onCreate(savedInstanceState)
-            setContentView(R.layout.dialog_add_location)
+            binding = DialogAddLocationBinding.inflate(LayoutInflater.from(context))
+            setContentView(binding.root)
 
             val status = mutableListOf(resources.getString(R.string.status_hint))
             status.addAll(StatusUI.values().map { it.toString() })
 
-            status_spinner.apply {
+            binding.statusSpinner.apply {
                 adapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, status)
 
                 onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -186,15 +190,15 @@ class WeatherForecastActivity : AppCompatActivity() {
                 }
             }
 
-            city_name.afterTextChanged { validateFieldsAndEnableButton() }
-            temperature.afterTextChanged { validateFieldsAndEnableButton() }
+            binding.cityName.afterTextChanged { validateFieldsAndEnableButton() }
+            binding.temperature.afterTextChanged { validateFieldsAndEnableButton() }
 
-            add_location_button.setOnClickListener {
-                error_message.visibility = View.GONE
+            binding.addLocationButton.setOnClickListener {
+                binding.errorMessage.visibility = View.GONE
                 dialogListener?.onAddLocationButtonClicked(
-                    city_name.text.toString(),
-                    status_spinner.selectedItem.toString(),
-                    temperature.text.toString()
+                    binding.cityName.text.toString(),
+                    binding.statusSpinner.selectedItem.toString(),
+                    binding.temperature.text.toString()
                 )
             }
         }
@@ -204,13 +208,13 @@ class WeatherForecastActivity : AppCompatActivity() {
         }
 
         fun showError() {
-            error_message.visibility = View.VISIBLE
+            binding.errorMessage.visibility = View.VISIBLE
         }
 
         private fun validateFieldsAndEnableButton() {
-            add_location_button.isEnabled = city_name.text.isNotEmpty() &&
-                    status_spinner.selectedItemPosition != 0 &&
-                    temperature.text.isNotEmpty()
+            binding.addLocationButton.isEnabled = binding.cityName.text.isNotEmpty() &&
+                    binding.statusSpinner.selectedItemPosition != 0 &&
+                    binding.temperature.text.isNotEmpty()
         }
     }
 }

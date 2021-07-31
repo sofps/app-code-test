@@ -2,25 +2,23 @@ package com.codetest.main.ui
 
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import com.codetest.R
-import kotlinx.android.synthetic.main.location.view.*
+import com.codetest.databinding.LocationBinding
 
 
-class LocationViewHolder private constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
+class LocationViewHolder private constructor(private val binding: LocationBinding) : RecyclerView.ViewHolder(binding.root) {
 
     companion object {
         fun create(parent: ViewGroup): LocationViewHolder {
-            val inflater = LayoutInflater.from(parent.context)
-            val view = inflater.inflate(R.layout.location, parent, false)
-            return LocationViewHolder(view)
+            val binding = LocationBinding
+                .inflate(LayoutInflater.from(parent.context), parent, false)
+            return LocationViewHolder(binding)
         }
     }
 
     fun setup(location: LocationUI) {
-        itemView.card.setCardBackgroundColor(itemView.resources.getColor(location.status.color))
-        itemView.name.text = location.name
-        itemView.weatherInfo.text = location.weather
+        binding.card.setCardBackgroundColor(itemView.resources.getColor(location.status.color))
+        binding.name.text = location.name
+        binding.weatherInfo.text = location.weather
     }
 }
